@@ -17,9 +17,8 @@ public_html/
 ├── humans.txt              # /humans.txt convention
 ├── security.txt            # RFC 9116 security contact
 └── assets/
-    ├── logo-master.png     # 512x512 source icon (used in nav + hero)
-    ├── github-avatar.png   # 400x400 for GitHub org avatar
-    └── linkedin-profile.png # 400x400 for LinkedIn page picture
+    ├── logo-master.png     # 512x512 source icon (PNG fallback)
+    └── logo-master.webp    # 512x512 source icon (modern browsers)
 ```
 
 ## Deployment Steps (Rumahweb cPanel)
@@ -79,11 +78,12 @@ public_html/
 | Asset | Use for |
 |---|---|
 | `assets/logo-master.png` (512px) | Master source. Use as-is for any large display. |
-| `assets/github-avatar.png` (400px) | Upload to GitHub org avatar |
-| `assets/linkedin-profile.png` (400px) | LinkedIn company page picture |
+| `assets/logo-master.webp` (512px) | Same artwork as WebP — served preferentially via `<picture>` |
 | `apple-touch-icon.png` (180px) | iOS home screen, also good for Slack/Discord avatars |
 | `favicon-32.png` | Browser tab icon |
 | `og-image.png` (1200x630) | Social link previews (auto-served via og:image meta) |
+
+For external profile avatars (GitHub org, LinkedIn, etc.), export from `logo-master.png` at the size required by each platform.
 
 ## Color palette (for any external use)
 
