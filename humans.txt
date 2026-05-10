@@ -1,0 +1,19 @@
+/* TEAM */
+
+  Lab:        MixedDrive Lab
+  Site:       https://mixeddrivelab.org
+  Contact:    contact [at] mixeddrivelab.org
+  Location:   Bandung, Indonesia
+
+/* SITE */
+
+  Last update:  2026/05
+  Standards:    HTML5, CSS3
+  Components:   None — handcrafted
+  Software:     None — static HTML
+
+/* RESEARCH */
+
+  Focus:        Visual SLAM, sensor fusion, motion planning
+  Domain:       Mixed-traffic autonomy (Southeast Asia)
+  Status:       Foundational phase, first publication 2026

@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>404 — MixedDrive Lab</title>
+<meta name="robots" content="noindex">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16.png">
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="shortcut icon" href="/favicon.ico">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300;9..144,400;9..144,600&family=JetBrains+Mono:wght@400;500&family=Source+Sans+3:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --navy-deep: #0a1628;
+  --ink: #e8eef5;
+  --ink-muted: #9bafc7;
+  --ink-subtle: #5d7894;
+  --accent: #5fb8a8;
+  --rule: #1f3454;
+}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+  font-family: 'Source Sans 3', sans-serif;
+  background: var(--navy-deep);
+  color: var(--ink);
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  -webkit-font-smoothing: antialiased;
+}
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background-image:
+    linear-gradient(var(--rule) 1px, transparent 1px),
+    linear-gradient(90deg, var(--rule) 1px, transparent 1px);
+  background-size: 80px 80px;
+  opacity: 0.15;
+  pointer-events: none;
+  z-index: 0;
+  mask-image: radial-gradient(ellipse at center, black 30%, transparent 75%);
+  -webkit-mask-image: radial-gradient(ellipse at center, black 30%, transparent 75%);
+}
+.wrap {
+  position: relative;
+  z-index: 1;
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 60px 32px;
+}
+.content {
+  max-width: 560px;
+  text-align: left;
+}
+.code {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 13px;
+  letter-spacing: 0.15em;
+  color: var(--accent);
+  margin-bottom: 32px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.code::before {
+  content: '';
+  width: 32px;
+  height: 1px;
+  background: var(--accent);
+}
+h1 {
+  font-family: 'Fraunces', Georgia, serif;
+  font-weight: 300;
+  font-size: clamp(40px, 6vw, 64px);
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+  margin-bottom: 24px;
+}
+h1 em {
+  font-style: italic;
+  color: var(--accent);
+}
+p {
+  font-size: 18px;
+  color: var(--ink-muted);
+  font-weight: 300;
+  line-height: 1.65;
+  margin-bottom: 40px;
+}
+a {
+  font-family: 'Fraunces', Georgia, serif;
+  font-style: italic;
+  font-size: 20px;
+  color: var(--accent);
+  text-decoration: none;
+  border-bottom: 1px solid var(--accent);
+  padding-bottom: 4px;
+  transition: all 0.3s ease;
+}
+a:hover {
+  color: var(--ink);
+  border-color: var(--ink);
+}
+a::after {
+  content: ' →';
+  font-style: normal;
+}
+</style>
+</head>
+<body>
+  <main class="wrap">
+    <div class="content">
+      <div class="code">ERROR 404 / TRACK LOST</div>
+      <h1>Localization <em>failed</em>.</h1>
+      <p>The requested resource could not be found at this position. Loop closure unavailable.</p>
+      <a href="/">Return to origin</a>
+    </div>
+  </main>
+</body>
+</html>

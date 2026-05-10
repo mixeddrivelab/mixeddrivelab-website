@@ -1,0 +1,725 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MixedDrive Lab — Robust perception and localization for mixed-traffic autonomy</title>
+<meta name="description" content="Independent research on visual SLAM, sensor fusion, and motion planning for autonomous systems operating in dense, heterogeneous traffic environments.">
+<meta name="author" content="MixedDrive Lab">
+
+<!-- Canonical -->
+<link rel="canonical" href="https://mixeddrivelab.org/">
+
+<!-- Open Graph -->
+<meta property="og:title" content="MixedDrive Lab — Mixed-Traffic Autonomy Research">
+<meta property="og:description" content="Independent research on robust perception and localization for mixed-traffic autonomy.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://mixeddrivelab.org">
+<meta property="og:image" content="https://mixeddrivelab.org/og-image.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:site_name" content="MixedDrive Lab">
+
+<!-- Twitter Card -->
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="MixedDrive Lab">
+<meta name="twitter:description" content="Independent research on robust perception and localization for mixed-traffic autonomy.">
+<meta name="twitter:image" content="https://mixeddrivelab.org/og-image.png">
+
+<!-- Theme color (mobile browser chrome) -->
+<meta name="theme-color" content="#0a1628">
+
+<!-- Favicons -->
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16.png">
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="shortcut icon" href="/favicon.ico">
+
+<!-- JSON-LD Schema (research organization) -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "ResearchOrganization",
+  "name": "MixedDrive Lab",
+  "url": "https://mixeddrivelab.org",
+  "description": "Independent research on robust perception and localization for mixed-traffic autonomy.",
+  "foundingDate": "2026",
+  "areaServed": "Worldwide",
+  "knowsAbout": [
+    "Visual SLAM",
+    "Sensor Fusion",
+    "Motion Planning",
+    "Autonomous Driving",
+    "Mixed Traffic"
+  ]
+}
+</script>
+
+<!-- Fonts: Fraunces (display serif) + JetBrains Mono (technical accent) + Source Sans 3 (body) -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300;9..144,400;9..144,600&family=JetBrains+Mono:wght@400;500&family=Source+Sans+3:wght@300;400;500;600&display=swap" rel="stylesheet">
+
+<style>
+:root {
+  --navy-deep: #0a1628;
+  --navy: #1a2f4a;
+  --navy-soft: #2c4566;
+  --ink: #e8eef5;
+  --ink-muted: #9bafc7;
+  --ink-subtle: #5d7894;
+  --accent: #5fb8a8;
+  --accent-bright: #7dd4c1;
+  --accent-warm: #d4a574;
+  --accent-dim: #3d8478;
+  --rule: #1f3454;
+
+  --display: 'Fraunces', Georgia, serif;
+  --body: 'Source Sans 3', -apple-system, sans-serif;
+  --mono: 'JetBrains Mono', 'Courier New', monospace;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: var(--body);
+  font-weight: 400;
+  font-size: 17px;
+  line-height: 1.65;
+  color: var(--ink);
+  background: var(--navy-deep);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  overflow-x: hidden;
+}
+
+/* Subtle grid background */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background-image:
+    linear-gradient(var(--rule) 1px, transparent 1px),
+    linear-gradient(90deg, var(--rule) 1px, transparent 1px);
+  background-size: 80px 80px;
+  opacity: 0.15;
+  pointer-events: none;
+  z-index: 0;
+  mask-image: radial-gradient(ellipse at center, black 30%, transparent 75%);
+  -webkit-mask-image: radial-gradient(ellipse at center, black 30%, transparent 75%);
+}
+
+.container {
+  position: relative;
+  z-index: 1;
+  max-width: 1080px;
+  margin: 0 auto;
+  padding: 0 32px;
+}
+
+/* ===== NAVIGATION ===== */
+nav {
+  position: relative;
+  z-index: 10;
+  padding: 28px 0;
+  border-bottom: 1px solid var(--rule);
+}
+
+nav .container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.brand {
+  font-family: var(--display);
+  font-weight: 600;
+  font-size: 19px;
+  letter-spacing: -0.01em;
+  color: var(--ink);
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.brand-logo {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  display: block;
+}
+
+.brand-mark {
+  color: var(--accent);
+}
+
+nav ul {
+  list-style: none;
+  display: flex;
+  gap: 36px;
+}
+
+nav a {
+  font-family: var(--mono);
+  font-size: 13px;
+  color: var(--ink-muted);
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+
+nav a:hover { color: var(--accent); }
+
+/* ===== HERO ===== */
+.hero {
+  padding: 140px 0 120px;
+  position: relative;
+}
+
+.hero-grid {
+  display: grid;
+  grid-template-columns: 1fr 360px;
+  gap: 80px;
+  align-items: center;
+}
+
+.hero-visual {
+  opacity: 0;
+  animation: fadeIn 1.2s ease 0.6s forwards;
+}
+
+.hero-image {
+  width: 100%;
+  height: auto;
+  display: block;
+  border-radius: 50%;
+  filter: drop-shadow(0 20px 60px rgba(95, 184, 168, 0.15));
+  animation: floatGentle 8s ease-in-out infinite;
+}
+
+@keyframes floatGentle {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-12px); }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.eyebrow {
+  font-family: var(--mono);
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: 32px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  opacity: 0;
+  animation: fadeUp 0.8s ease forwards;
+}
+
+.eyebrow::before {
+  content: '';
+  width: 32px;
+  height: 1px;
+  background: var(--accent);
+}
+
+.hero h1 {
+  font-family: var(--display);
+  font-weight: 300;
+  font-size: clamp(38px, 5.5vw, 68px);
+  line-height: 1.08;
+  letter-spacing: -0.02em;
+  color: var(--ink);
+  max-width: 18ch;
+  margin-bottom: 36px;
+  opacity: 0;
+  animation: fadeUp 0.8s ease 0.15s forwards;
+}
+
+.hero h1 em {
+  font-style: italic;
+  font-weight: 400;
+  color: var(--accent);
+}
+
+.hero-sub {
+  font-size: 19px;
+  line-height: 1.6;
+  color: var(--ink-muted);
+  max-width: 58ch;
+  font-weight: 300;
+  opacity: 0;
+  animation: fadeUp 0.8s ease 0.3s forwards;
+}
+
+.hero-meta {
+  margin-top: 56px;
+  font-family: var(--mono);
+  font-size: 12px;
+  color: var(--ink-subtle);
+  display: flex;
+  gap: 32px;
+  flex-wrap: wrap;
+  opacity: 0;
+  animation: fadeUp 0.8s ease 0.45s forwards;
+}
+
+.hero-meta span {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.hero-meta span::before {
+  content: '';
+  width: 6px;
+  height: 6px;
+  background: var(--accent-dim);
+  border-radius: 50%;
+}
+
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* ===== SECTIONS ===== */
+section {
+  padding: 100px 0;
+  border-top: 1px solid var(--rule);
+}
+
+.section-header {
+  display: grid;
+  grid-template-columns: 200px 1fr;
+  gap: 48px;
+  margin-bottom: 64px;
+  align-items: baseline;
+}
+
+.section-num {
+  font-family: var(--mono);
+  font-size: 12px;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--accent);
+  font-weight: 500;
+}
+
+.section-title {
+  font-family: var(--display);
+  font-weight: 300;
+  font-size: clamp(32px, 4vw, 48px);
+  letter-spacing: -0.015em;
+  color: var(--ink);
+  line-height: 1.15;
+}
+
+.section-title em {
+  font-style: italic;
+  color: var(--accent);
+}
+
+/* ===== ABOUT ===== */
+.about-grid {
+  display: grid;
+  grid-template-columns: 200px 1fr;
+  gap: 48px;
+}
+
+.about-label {
+  font-family: var(--mono);
+  font-size: 12px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--ink-subtle);
+}
+
+.about-content p {
+  font-size: 18px;
+  line-height: 1.7;
+  color: var(--ink-muted);
+  margin-bottom: 24px;
+  max-width: 65ch;
+  font-weight: 300;
+}
+
+.about-content p strong {
+  color: var(--ink);
+  font-weight: 500;
+}
+
+/* ===== RESEARCH ===== */
+.research-list {
+  display: flex;
+  flex-direction: column;
+}
+
+.research-item {
+  display: grid;
+  grid-template-columns: 200px 1fr 80px;
+  gap: 48px;
+  padding: 40px 0;
+  border-top: 1px solid var(--rule);
+  align-items: baseline;
+  transition: padding-left 0.3s ease;
+}
+
+.research-item:hover {
+  padding-left: 12px;
+}
+
+.research-item:last-child {
+  border-bottom: 1px solid var(--rule);
+}
+
+.research-tag {
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--accent-dim);
+  padding-top: 6px;
+}
+
+.research-content h3 {
+  font-family: var(--display);
+  font-weight: 400;
+  font-size: 26px;
+  letter-spacing: -0.01em;
+  color: var(--ink);
+  margin-bottom: 12px;
+  line-height: 1.25;
+}
+
+.research-content p {
+  font-size: 16px;
+  line-height: 1.65;
+  color: var(--ink-muted);
+  font-weight: 300;
+  max-width: 60ch;
+}
+
+.research-id {
+  font-family: var(--mono);
+  font-size: 13px;
+  color: var(--ink-subtle);
+  text-align: right;
+  padding-top: 6px;
+}
+
+/* ===== CONTACT ===== */
+.contact-grid {
+  display: grid;
+  grid-template-columns: 200px 1fr;
+  gap: 48px;
+}
+
+.contact-content {
+  max-width: 56ch;
+}
+
+.contact-content p {
+  font-size: 19px;
+  line-height: 1.65;
+  color: var(--ink-muted);
+  font-weight: 300;
+  margin-bottom: 32px;
+}
+
+.contact-email {
+  display: inline-flex;
+  align-items: center;
+  gap: 14px;
+  font-family: var(--display);
+  font-size: 28px;
+  font-weight: 400;
+  font-style: italic;
+  color: var(--accent);
+  text-decoration: none;
+  padding: 8px 0;
+  border-bottom: 1px solid var(--accent-dim);
+  transition: all 0.3s ease;
+}
+
+.contact-email:hover {
+  color: var(--ink);
+  border-color: var(--ink);
+}
+
+.contact-email::after {
+  content: '→';
+  font-style: normal;
+  transition: transform 0.3s ease;
+}
+
+.contact-email:hover::after {
+  transform: translateX(6px);
+}
+
+.contact-note {
+  margin-top: 40px;
+  padding-top: 24px;
+  border-top: 1px solid var(--rule);
+  font-family: var(--mono);
+  font-size: 13px;
+  color: var(--ink-subtle);
+  line-height: 1.6;
+}
+
+/* ===== FOOTER ===== */
+footer {
+  padding: 60px 0 40px;
+  border-top: 1px solid var(--rule);
+  margin-top: 80px;
+}
+
+footer .container {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  flex-wrap: wrap;
+  gap: 32px;
+}
+
+.footer-brand {
+  font-family: var(--display);
+  font-size: 16px;
+  color: var(--ink-muted);
+  font-weight: 400;
+}
+
+.footer-meta {
+  font-family: var(--mono);
+  font-size: 11px;
+  color: var(--ink-subtle);
+  text-align: right;
+  line-height: 1.7;
+  max-width: 50ch;
+}
+
+.footer-disclaimer {
+  margin-top: 8px;
+  font-style: italic;
+}
+
+/* ===== RESPONSIVE ===== */
+@media (max-width: 900px) {
+  .hero-grid {
+    grid-template-columns: 1fr;
+    gap: 60px;
+  }
+  .hero-visual {
+    max-width: 280px;
+    margin: 0 auto;
+  }
+}
+
+@media (max-width: 720px) {
+  nav ul { gap: 20px; }
+  nav a { font-size: 12px; }
+  .brand span { font-size: 16px; }
+  .brand-logo { width: 32px; height: 32px; }
+
+  .hero { padding: 80px 0 60px; }
+  .hero-meta { gap: 20px; flex-direction: column; }
+  .hero-visual { max-width: 220px; }
+
+  section { padding: 60px 0; }
+
+  .section-header,
+  .about-grid,
+  .research-item,
+  .contact-grid {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+
+  .research-item {
+    grid-template-columns: 1fr;
+    padding: 28px 0;
+  }
+
+  .research-id { text-align: left; }
+
+  footer .container {
+    flex-direction: column;
+  }
+
+  .footer-meta { text-align: left; }
+}
+
+/* Selection */
+::selection {
+  background: var(--accent);
+  color: var(--navy-deep);
+}
+
+/* Reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+  html { scroll-behavior: auto; }
+  .hero-visual, .eyebrow, .hero h1, .hero-sub, .hero-meta { opacity: 1; }
+}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="container">
+    <a href="/" class="brand">
+      <picture>
+        <source srcset="/assets/logo-master.webp" type="image/webp">
+        <img src="/assets/logo-master.png" alt="" class="brand-logo" width="36" height="36">
+      </picture>
+      <span>Mixed<span class="brand-mark">Drive</span> Lab</span>
+    </a>
+    <ul>
+      <li><a href="#about">About</a></li>
+      <li><a href="#research">Research</a></li>
+      <li><a href="#contact">Contact</a></li>
+    </ul>
+  </div>
+</nav>
+
+<header class="hero">
+  <div class="container">
+    <div class="hero-grid">
+      <div class="hero-text">
+        <div class="eyebrow">Independent Research Initiative</div>
+        <h1>Robust perception and <em>localization</em> for mixed-traffic autonomy.</h1>
+        <p class="hero-sub">
+          We study how autonomous systems perceive, localize, and plan in dense, heterogeneous traffic — environments where motorcycles, paratransit vehicles, and unstructured road behavior define the operating reality.
+        </p>
+        <div class="hero-meta">
+          <span>Est. 2026</span>
+          <span>Bandung · Indonesia</span>
+          <span>Visual SLAM &nbsp;/&nbsp; Sensor Fusion &nbsp;/&nbsp; Motion Planning</span>
+        </div>
+      </div>
+      <div class="hero-visual">
+        <picture>
+          <source srcset="/assets/logo-master.webp" type="image/webp">
+          <img src="/assets/logo-master.png" alt="MixedDrive Lab — converging trajectories visualization" class="hero-image" width="360" height="360" fetchpriority="high">
+        </picture>
+      </div>
+    </div>
+  </div>
+</header>
+
+<section id="about">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-num">§ 01 / About</div>
+      <h2 class="section-title">A research lab focused on the <em>autonomy gap</em> in Southeast Asian traffic.</h2>
+    </div>
+
+    <div class="about-grid">
+      <div class="about-label">Mission</div>
+      <div class="about-content">
+        <p>
+          MixedDrive Lab is an <strong>independent research initiative</strong> investigating perception, localization, and decision-making for autonomous systems operating in mixed-traffic environments — characterized by dense two-wheeler populations, weak lane discipline, and irregular vehicle geometries.
+        </p>
+        <p>
+          The dominant body of autonomous-driving research has been shaped by highway-centric and structured-urban assumptions from North American, European, and Chinese contexts. <strong>Southeast Asian traffic violates most of those assumptions.</strong> Our work characterizes where existing methods fail, and develops approaches that remain robust under these conditions.
+        </p>
+        <p>
+          The lab operates in a deliberate, publication-driven cadence: empirical work first, claims second.
+        </p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="research">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-num">§ 02 / Research</div>
+      <h2 class="section-title">Three intersecting <em>threads</em>.</h2>
+    </div>
+
+    <div class="research-list">
+
+      <article class="research-item">
+        <div class="research-tag">Perception</div>
+        <div class="research-content">
+          <h3>Visual SLAM in Mixed Traffic</h3>
+          <p>Empirical characterization of failure modes in state-of-the-art visual SLAM systems (ORB-SLAM3, VINS-Fusion) when operated in motorcycle-dominated, dynamic-object-rich scenes. Toward feature-selection strategies that remain stable under aggressive scene change.</p>
+        </div>
+        <div class="research-id">R—01</div>
+      </article>
+
+      <article class="research-item">
+        <div class="research-tag">State Estimation</div>
+        <div class="research-content">
+          <h3>Sensor Fusion for Two-Wheeler Dynamics</h3>
+          <p>Visual-inertial odometry tailored to motorcycle-class platforms, where roll dynamics, vibration profiles, and mounting geometries differ substantially from automotive assumptions baked into existing VI-SLAM stacks.</p>
+        </div>
+        <div class="research-id">R—02</div>
+      </article>
+
+      <article class="research-item">
+        <div class="research-tag">Decision-Making</div>
+        <div class="research-content">
+          <h3>Interaction-Aware Motion Planning</h3>
+          <p>Game-theoretic motion planning for vehicles navigating around paratransit and informal road users — agents whose intent is poorly captured by classical predict-then-plan pipelines. Future work, contingent on perception-stack maturity.</p>
+        </div>
+        <div class="research-id">R—03</div>
+      </article>
+
+    </div>
+  </div>
+</section>
+
+<section id="contact">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-num">§ 03 / Contact</div>
+      <h2 class="section-title">Open to <em>collaboration</em>.</h2>
+    </div>
+
+    <div class="contact-grid">
+      <div class="about-label">Reach Out</div>
+      <div class="contact-content">
+        <p>
+          The lab is open to correspondence with academic researchers, graduate students, and engineers working on related problems in perception, localization, or motion planning under unstructured-traffic conditions.
+        </p>
+        <a href="mailto:contact@mixeddrivelab.org" class="contact-email">contact@mixeddrivelab.org</a>
+
+        <div class="contact-note">
+          The lab is currently in a foundational phase. First publications expected late 2026.<br>
+          Public code, datasets, and preprints will be released alongside formal submissions.
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="container">
+    <div class="footer-brand">
+      Mixed<span style="color: var(--accent);">Drive</span> Lab
+    </div>
+    <div class="footer-meta">
+      © 2026 MixedDrive Lab. All rights reserved.
+      <div class="footer-disclaimer">
+        This is an independent research initiative. Views and work expressed here do not represent any employer or affiliated institution.
+      </div>
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>
